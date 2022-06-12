@@ -1,0 +1,31 @@
+# Copyright 2022 Jorge Luis Juárez M. <jorge@jorgejuarez.net>
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+services:
+  app:
+    image: odoo-docker:latest
+    build:
+      context: odoo
+    ports:
+      - '8069:8069'
+      - '8072:8072'
+    depends_on:
+      - db
+    volumes:
+      - 'odoo-data:/odoo/data'
+    environment:
+      - HOST=db
+      - USERNAME=odoo
+      - PASSWORD=odoo
+      - PG_DATABASE=postgres
+  db:
+    image: postgres:13.6-alpine
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=odoo
+      - POSTGRES_PASSWORD=odoo
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - 'postgres-data:/var/lib/postgresql/data'
+volumes:
+  postgres-data:
+  odoo-data:
